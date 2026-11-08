@@ -11,6 +11,8 @@ class QuizTests(unittest.TestCase):
     def test_quiz_validation(self):
         with self.assertRaises(ValueError):
             Quiz("문제", ["1", "2"], 1)
+        with self.assertRaises(ValueError):
+            Quiz("문제", ["1", "", "3", "4"], 1)
 
     def test_game_score_and_invalid_input(self):
         quiz = Quiz("1+1?", ["1", "2", "3", "4"], 2)
@@ -26,6 +28,10 @@ class QuizTests(unittest.TestCase):
             quizzes, scores = storage.load([])
             self.assertEqual(quizzes[0].question, "저장?")
             self.assertEqual(scores, [1])
+
+    def test_score_summary(self):
+        game = QuizGame([], [2, 4])
+        self.assertEqual(game.score_summary(), {"attempts": 2, "high_score": 4})
 
 
 if __name__ == "__main__":
