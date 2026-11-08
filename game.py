@@ -34,3 +34,6 @@ class QuizGame:
 
     def high_score(self):
         return max(self.scores, default=0)
+
+    def score_summary(self):
+        return {"attempts": len(self.scores), "high_score": self.high_score()}
