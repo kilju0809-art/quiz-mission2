@@ -24,4 +24,6 @@ class StateStorage:
 
     def save(self, quizzes, scores):
         data = {"quizzes": [quiz.to_dict() for quiz in quizzes], "scores": scores}
-        self.path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        temp_path = self.path.with_suffix(".tmp")
+        temp_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        temp_path.replace(self.path)
