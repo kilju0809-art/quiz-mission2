@@ -17,6 +17,20 @@ DEFAULT_QUIZZES = [
 ]
 
 
+def save_state(storage, game):
+    """저장 실패를 안내하고 한 번 재시도한다."""
+    for attempt in range(2):
+        try:
+            storage.save(game.quizzes, game.scores)
+            return True
+        except OSError as error:
+            if attempt == 0:
+                print(f"저장에 실패했습니다({error}). 한 번 더 시도합니다.")
+            else:
+                print("재시도도 실패했습니다. 프로그램을 종료하기 전에 state.json 권한을 확인하세요.")
+    return False
+
+
 def run():
     storage = StateStorage()
     quizzes, scores = storage.load(DEFAULT_QUIZZES)
@@ -27,19 +41,19 @@ def run():
         try:
             choice = input("선택: ").strip()
         except (EOFError, KeyboardInterrupt):
-            print("\n종료합니다.")
-            storage.save(game.quizzes, game.scores)
+            print("\n중단되었습니다. 임시 파일을 만든 뒤 교체하는 방식으로 저장하고 종료합니다.")
+            save_state(storage, game)
             return
         if choice == "1":
             game.play()
-            storage.save(game.quizzes, game.scores)
+            save_state(storage, game)
         elif choice == "2":
             question = input("문제: ").strip()
             choices = [input(f"보기 {i}: ").strip() for i in range(1, 5)]
             try:
                 answer = int(input("정답 번호(1~4): "))
                 game.add_quiz(Quiz(question, choices, answer))
-                storage.save(game.quizzes, game.scores)
+                save_state(storage, game)
                 print("문제를 추가했습니다.")
             except ValueError as error:
                 print(f"추가하지 못했습니다: {error}")
@@ -51,7 +65,7 @@ def run():
             print(f"최고 점수: {summary['high_score']}/{len(game.quizzes)}")
             print(f"도전 횟수: {summary['attempts']}")
         elif choice == "5":
-            storage.save(game.quizzes, game.scores)
+            save_state(storage, game)
             print("저장하고 종료합니다.")
             return
         else:
