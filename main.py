@@ -42,7 +42,9 @@ def run():
             for index, quiz in enumerate(game.quizzes, 1):
                 print(f"{index}. {quiz.question}")
         elif choice == "4":
-            print(f"최고 점수: {game.high_score()}/{len(game.quizzes)}")
+            summary = game.score_summary()
+            print(f"최고 점수: {summary['high_score']}/{len(game.quizzes)}")
+            print(f"도전 횟수: {summary['attempts']}")
         elif choice == "5":
             storage.save(game.quizzes, game.scores)
             print("저장하고 종료합니다.")
