@@ -1,4 +1,8 @@
-실행 명령: git log --oneline --graph --all -15
+실행 명령: git log --oneline --graph --all -18
+
+* be06ac5 docs: add evaluation evidence and coverage
+* 1c71a0e docs: align git evidence with final log
+* 34e0ebc docs: address evaluation feedback
 
 * 1c71a0e docs: align git evidence with final log
 * 34e0ebc docs: address evaluation feedback
