@@ -1,4 +1,5 @@
 class Quiz:
+    """한 문제의 보기, 정답, 해설을 검증하고 판정합니다."""
     def __init__(self, question, choices, answer, explanation=""):
         if not isinstance(question, str) or not question.strip():
             raise ValueError("문제는 비어 있을 수 없습니다.")
@@ -12,11 +13,13 @@ class Quiz:
         self.explanation = explanation
 
     def ask(self):
+        """문제와 네 개의 보기를 화면에 출력합니다."""
         print(f"\n{self.question}")
         for number, choice in enumerate(self.choices, 1):
             print(f"{number}. {choice}")
 
     def check_answer(self, selected):
+        """선택 번호가 정답 번호와 같은지 반환합니다."""
         return selected == self.answer
 
     def to_dict(self):

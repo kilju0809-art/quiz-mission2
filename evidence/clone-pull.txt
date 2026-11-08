@@ -1,0 +1,14 @@
+실제 수행 순서:
+
+git clone https://github.com/kilju0809-art/quiz-mission2.git mission2-clone
+git commit -m "docs: record clone and pull practice"
+git push origin main
+git pull --ff-only origin main
+
+결과:
+Updating 8a47c82..c9eba59
+Fast-forward
+ README.md | 2 ++
+1 file changed, 2 insertions(+)
+
+원본 작업 폴더와 원격 main이 동일한 커밋으로 확인되었습니다.

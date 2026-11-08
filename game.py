@@ -2,11 +2,13 @@ from quiz import Quiz
 
 
 class QuizGame:
+    """문제 목록을 순회하고 점수를 기록하는 게임 관리자입니다."""
     def __init__(self, quizzes, scores=None):
         self.quizzes = quizzes
         self.scores = scores or []
 
     def play(self, input_func=input):
+        """입력을 받아 한 라운드의 점수를 계산합니다."""
         score = 0
         for quiz in self.quizzes:
             quiz.ask()

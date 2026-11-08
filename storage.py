@@ -5,6 +5,7 @@ from quiz import Quiz
 
 
 class StateStorage:
+    """JSON state 파일의 읽기, 검증, 안전한 저장을 담당합니다."""
     def __init__(self, path="state.json"):
         self.path = Path(path)
 

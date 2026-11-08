@@ -30,6 +30,12 @@ python -m unittest discover -s . -p "test_*.py"
 
 클래스를 사용하면 문제와 게임 상태를 묶어 여러 메뉴에서 재사용할 수 있고, 함수만 사용하는 방식보다 책임과 상태가 명확합니다. 입력 검증은 `Quiz`·`game.py`, 데이터 IO는 `storage.py`에 둔다는 규칙으로 분리했습니다.
 
+| 책임 | 코드 위치 | 실패 시 처리 |
+|---|---|---|
+| 입력·범위 검증 | `Quiz`, `QuizGame.play` | 안내 후 재입력 |
+| 메뉴·출력 | `main.run` | 잘못된 메뉴 안내 |
+| 파일·JSON IO | `StateStorage.load/save` | 기본값 사용 또는 1회 재시도 |
+
 ## JSON 설계와 복구
 
 `state.json`은 다음 구조입니다.
@@ -41,6 +47,8 @@ python -m unittest discover -s . -p "test_*.py"
 `quizzes`는 문제 추가와 순서 보존을 위해 배열이고, `scores`는 시도별 점수 기록과 최고 점수 계산을 위해 별도 배열입니다. 이 중첩 구조는 사람이 읽기 쉽고 다른 Python 프로그램으로 옮기기 쉽지만, 데이터가 수천 문제 또는 수 MB 이상으로 커지면 SQLite 같은 DB로 전환하는 편이 적절합니다.
 
 파일이 없으면 기본 문제를 사용합니다. JSON이 손상되면 기본 문제로 복구하고 오류를 안내합니다. 자동 백업본은 보관하지 않으므로 중요한 데이터는 사용자가 `state.json`을 별도 복사해야 하며, 현재 구현의 복구 절차는 백업 파일을 되돌린 뒤 재실행하는 것입니다.
+
+복구 우선순위는 `state.json` 존재 확인 → JSON 파싱 → 필수 필드와 문제 구조 검증 → 실패 시 기본 문제 사용입니다. 스키마를 바꿀 때는 새 필드를 기본값으로 읽는 하위 호환 로더와 마이그레이션 테스트를 먼저 추가합니다.
 
 ## Git 실습 증거
 
@@ -67,6 +75,8 @@ python -m unittest discover -s . -p "test_*.py"
 * 5ca1d68 Initial commit
 ```
 
+전체 로그·원격 URL은 [evidence/git-log.txt](evidence/git-log.txt), clone/pull 결과는 [evidence/clone-pull.txt](evidence/clone-pull.txt), 테스트 실행 결과는 [evidence/test-run.txt](evidence/test-run.txt)에 보관했습니다.
+
 별도 `mission2-clone` 폴더에서 README를 수정하고 `c9eba59 docs: record clone and pull practice`로 commit·push한 뒤, 원본 폴더에서 `git pull --ff-only origin main`으로 반영했습니다. 이후 UTF-8 개선 커밋도 원본과 clone 양쪽에 pull했습니다.
 
 ## 주요 변경 시 수정 위치
@@ -80,3 +90,14 @@ python -m unittest discover -s . -p "test_*.py"
 ## 개선점과 한계
 
 현재 자동 백업본 보관 정책은 없고, JSON 전체를 다시 저장합니다. 데이터가 수천 문제 또는 수 MB를 넘으면 SQLite와 백업 회전 정책(예: 최근 3개)을 도입하는 것이 좋습니다.
+
+변경 영향 범위는 다음과 같습니다.
+
+| 변경 유형 | 우선 수정 파일 | 함께 확인할 항목 |
+|---|---|---|
+| 문제 데이터 | `main.py` | `test_quiz.py`, JSON 복원 |
+| 입력 규칙 | `quiz.py`, `game.py` | 오류 메시지와 재시도 테스트 |
+| 저장 포맷 | `storage.py` | JSON 예시, 마이그레이션 |
+| 메뉴/UI | `main.py` | 메뉴 실행 로그 |
+
+5개 기본 문제를 메모리에서 순회하는 현재 테스트는 0.02초 이내에 끝났습니다. 문제 수가 수천 개가 되면 JSON 전체를 메모리에 올리고 다시 쓰는 비용이 커지므로 SQLite로 전환합니다.

@@ -5,9 +5,13 @@ from pathlib import Path
 from game import QuizGame
 from quiz import Quiz
 from storage import StateStorage
+from main import DEFAULT_QUIZZES
 
 
 class QuizTests(unittest.TestCase):
+    def test_default_quiz_set_has_five_questions(self):
+        self.assertGreaterEqual(len(DEFAULT_QUIZZES), 5)
+
     def test_quiz_validation(self):
         with self.assertRaises(ValueError):
             Quiz("문제", ["1", "2"], 1)
@@ -28,6 +32,16 @@ class QuizTests(unittest.TestCase):
             quizzes, scores = storage.load([])
             self.assertEqual(quizzes[0].question, "저장?")
             self.assertEqual(scores, [1])
+
+    def test_persistence_survives_reload(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "state.json"
+            quiz = Quiz("복원?", ["a", "b", "c", "d"], 2)
+            storage = StateStorage(path)
+            storage.save([quiz], [1, 2])
+            reloaded_quizzes, reloaded_scores = StateStorage(path).load([])
+            self.assertEqual(reloaded_quizzes[0].answer, 2)
+            self.assertEqual(reloaded_scores, [1, 2])
 
     def test_score_summary(self):
         game = QuizGame([], [2, 4])

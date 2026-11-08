@@ -1,0 +1,21 @@
+실행 명령: git log --oneline --graph --all -15
+
+* 1c71a0e docs: align git evidence with final log
+* 34e0ebc docs: address evaluation feedback
+* 05cb1ec fix: configure UTF-8 console output
+* c9eba59 docs: record clone and pull practice
+*   8a47c82 merge: validation and safe persistence
+|\\
+| * 89c4100 chore: ignore temporary state files
+| * 01f4c16 test: verify corrupted state recovery
+| * c8bfc1b docs: document validation and safe saves
+| * fb006fb feat: show quiz attempt count
+| * ce3569c test: cover validation and score summary
+| * b16bb62 fix: save state atomically
+| * 4e4ceab feat: expose score summary
+| * ed2a14d fix: reject blank quiz choices
+|/
+* dcf2cb7 feat: complete Python Git quiz mission
+* 5ca1d68 Initial commit
+
+원격 저장소: https://github.com/kilju0809-art/quiz-mission2
