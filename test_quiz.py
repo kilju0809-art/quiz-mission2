@@ -33,6 +33,15 @@ class QuizTests(unittest.TestCase):
         game = QuizGame([], [2, 4])
         self.assertEqual(game.score_summary(), {"attempts": 2, "high_score": 4})
 
+    def test_corrupted_state_uses_defaults(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "state.json"
+            path.write_text("{broken", encoding="utf-8")
+            default = Quiz("기본?", ["a", "b", "c", "d"], 1)
+            quizzes, scores = StateStorage(path).load([default])
+            self.assertEqual(quizzes[0].question, "기본?")
+            self.assertEqual(scores, [])
+
 
 if __name__ == "__main__":
     unittest.main()
