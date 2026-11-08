@@ -2,7 +2,7 @@ class Quiz:
     def __init__(self, question, choices, answer, explanation=""):
         if not isinstance(question, str) or not question.strip():
             raise ValueError("문제는 비어 있을 수 없습니다.")
-        if len(choices) != 4:
+        if len(choices) != 4 or any(not isinstance(choice, str) or not choice.strip() for choice in choices):
             raise ValueError("보기는 4개여야 합니다.")
         if not 1 <= answer <= 4:
             raise ValueError("정답 번호는 1~4여야 합니다.")
