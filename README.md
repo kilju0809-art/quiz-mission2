@@ -49,7 +49,10 @@ python -m unittest discover -s . -p "test_*.py"
 실제 최종 로그는 다음과 같습니다.
 
 ```text
-* 8a47c82 merge: validation and safe persistence
+* 34e0ebc docs: address evaluation feedback
+* 05cb1ec fix: configure UTF-8 console output
+* c9eba59 docs: record clone and pull practice
+*   8a47c82 merge: validation and safe persistence
 |\\
 | * 89c4100 chore: ignore temporary state files
 | * 01f4c16 test: verify corrupted state recovery
@@ -62,8 +65,6 @@ python -m unittest discover -s . -p "test_*.py"
 |/
 * dcf2cb7 feat: complete Python Git quiz mission
 * 5ca1d68 Initial commit
-* c9eba59 docs: record clone and pull practice
-* 05cb1ec fix: configure UTF-8 console output
 ```
 
 별도 `mission2-clone` 폴더에서 README를 수정하고 `c9eba59 docs: record clone and pull practice`로 commit·push한 뒤, 원본 폴더에서 `git pull --ff-only origin main`으로 반영했습니다. 이후 UTF-8 개선 커밋도 원본과 clone 양쪽에 pull했습니다.
